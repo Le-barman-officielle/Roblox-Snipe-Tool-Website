@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roblox Snipe Tool // by Kinito.exe</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #cc0000;
+    --red2: #ff2020;
+    --dark: #080808;
+    --surface: #0f0f0f;
+    --card: #131313;
+    --card2: #1a1a1a;
+    --border: #2a0000;
+    --border2: #3d0000;
+    --glow: #1a0000;
+    --text: #d0d0d0;
+    --dim: #444444;
+    --mid: #888888;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Oswald', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: var(--mono);
+    overflow-x: hidden;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--red); }
+
+  /* ── GRID BG ── */
+  .grid-overlay {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--glow) 1px, transparent 1px),
+      linear-gradient(90deg, var(--glow) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(8,8,8,0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 52px;
+  }
+  .nav-brand {
+    font-family: var(--display);
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: var(--red);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nav-brand .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--mid);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--red); }
+
+  /* ── WRAPPER ── */
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 0 4rem;
+  }
+  .hero-eyebrow {
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: 5px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--red);
+  }
+  .hero-title {
+    font-family: var(--display);
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -1px;
+    margin-bottom: 1rem;
+  }
+  .hero-title .line1 { color: var(--text); display: block; }
+  .hero-title .line2 { color: var(--red); display: block; }
+  .hero-title .line3 { color: var(--dim); display: block; font-size: 55%; letter-spacing: 6px; font-weight: 400; margin-top: .5rem; }
+
+  .hero-desc {
+    font-size: 13px;
+    color: var(--mid);
+    line-height: 2;
+    max-width: 520px;
+    margin: 2rem 0;
+    border-left: 2px solid var(--border2);
+    padding-left: 1.25rem;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .btn-primary {
+    background: var(--red);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 14px 32px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .2s, transform .1s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .btn-primary:hover { background: var(--red2); transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--red);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 13px 32px;
+    border: 1px solid var(--border2);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: border-color .2s, color .2s;
+  }
+  .btn-secondary:hover { border-color: var(--red); color: var(--red2); }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .hero-stat .n {
+    font-family: var(--display);
+    font-size: 2.5rem;
+    color: var(--red);
+    line-height: 1;
+  }
+  .hero-stat .l {
+    font-size: 9px;
+    color: var(--dim);
+    letter-spacing: 3px;
+    margin-top: .3rem;
+  }
+
+  /* ── SECTION LABEL ── */
+  .sec-label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 9px;
+    color: var(--red);
+    letter-spacing: 5px;
+    margin-bottom: 2.5rem;
+  }
+  .sec-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  section { padding: 5rem 0; }
+
+  /* ── TARGET SYSTEM ── */
+  .target-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+  .target-cell {
+    background: var(--card);
+    padding: 2rem 1.5rem;
+    position: relative;
+    transition: background .2s;
+  }
+  .target-cell:hover { background: var(--card2); }
+  .target-cell .num {
+    font-family: var(--display);
+    font-size: 3rem;
+    color: var(--border2);
+    position: absolute;
+    top: 1rem; right: 1.25rem;
+    line-height: 1;
+  }
+  .target-cell .method-tag {
+    font-size: 9px;
+    color: var(--red);
+    letter-spacing: 3px;
+    margin-bottom: .75rem;
+  }
+  .target-cell .method-name {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    color: var(--text);
+    letter-spacing: 2px;
+    margin-bottom: .5rem;
+  }
+  .target-cell .method-desc {
+    font-size: 11px;
+    color: var(--mid);
+    line-height: 1.8;
+  }
+  .target-cell::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--red);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform .3s ease;
+  }
+  .target-cell:hover::before { transform: scaleY(1); }
+
+  /* ── DATA SECTIONS ── */
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .data-card {
+    background: var(--card);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: background .2s;
+  }
+  .data-card:hover { background: var(--card2); }
+  .data-card .dc-tag {
+    font-size: 9px;
+    color: var(--red);
+    letter-spacing: 3px;
+    margin-bottom: .6rem;
+  }
+  .data-card .dc-title {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    color: var(--text);
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+  }
+  .data-card ul {
+    list-style: none;
+  }
+  .data-card ul li {
+    font-size: 12px;
+    color: var(--mid);
+    padding: .3rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+  }
+  .data-card ul li::before {
+    content: '▸';
+    color: var(--red);
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .data-card .dc-corner {
+    position: absolute;
+    bottom: 1.2rem; right: 1.5rem;
+    font-family: var(--display);
+    font-size: 4rem;
+    color: var(--glow);
+    line-height: 1;
+    pointer-events: none;
+  }
+  /* wide card */
+  .data-card.wide {
+    grid-column: span 2;
+  }
+
+  /* ── ONLINE STATUS ── */
+  .status-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .status-table tr {
+    border-bottom: 1px solid var(--border);
+  }
+  .status-table tr:last-child { border-bottom: none; }
+  .status-table td {
+    padding: .7rem .5rem;
+    vertical-align: middle;
+  }
+  .status-dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+  }
+  .s-green { background: #22cc66; box-shadow: 0 0 6px #22cc6688; }
+  .s-red   { background: var(--red2); box-shadow: 0 0 6px #ff202088; }
+  .s-orange{ background: #ff6622; box-shadow: 0 0 6px #ff662288; }
+  .s-blue  { background: #4488ff; box-shadow: 0 0 6px #4488ff88; }
+  .s-gray  { background: var(--dim); }
+  .st-label { color: var(--text); }
+  .st-desc  { color: var(--mid); }
+
+  /* ── FEATURES ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .feat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.5rem 1.25rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .feat-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transition: transform .3s;
+  }
+  .feat-card:hover::after { transform: scaleX(1); }
+  .feat-card .fi {
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--red);
+    margin-bottom: .5rem;
+  }
+  .feat-card .ft {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ── EXPORT ── */
+  .export-strip {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--red);
+    padding: 2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .export-strip .et { font-family: var(--display); font-size: 1.4rem; color: var(--text); letter-spacing: 2px; }
+  .export-strip .es { font-size: 11px; color: var(--mid); margin-top: .3rem; }
+
+  /* ── V2 ── */
+  .v2-box {
+    background: var(--card);
+    border: 1px dashed var(--border2);
+    padding: 2rem;
+  }
+  .v2-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .6rem 0;
+    font-size: 12px;
+    color: var(--mid);
+    border-bottom: 1px solid var(--border);
+  }
+  .v2-item:last-child { border-bottom: none; }
+  .v2-item .tick { color: var(--red); font-size: 14px; }
+  .v2-item .pending { color: var(--dim); font-size: 14px; }
+  .v2-item .vt { color: var(--text); }
+
+  /* ── NOTES ── */
+  .note-list {
+    font-size: 12px;
+    color: var(--mid);
+    line-height: 2.2;
+  }
+  .note-list li {
+    list-style: none;
+    display: flex;
+    gap: .75rem;
+    padding: .35rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .note-list li:last-child { border-bottom: none; }
+  .note-list li::before { content: '//'; color: var(--border2); flex-shrink: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer-brand {
+    font-family: var(--display);
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--red);
+  }
+  .footer-copy {
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 2px;
+    text-align: right;
+  }
+
+  /* ── DOWNLOAD STRIP ── */
+  .download-strip {
+    background: var(--red);
+    padding: 2.5rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .download-strip::before {
+    content: 'DOWNLOAD';
+    position: absolute;
+    right: -1rem; top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--display);
+    font-size: 5rem;
+    color: rgba(0,0,0,0.15);
+    letter-spacing: 8px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .download-strip .dt {
+    font-family: var(--display);
+    font-size: 1.6rem;
+    color: #fff;
+    letter-spacing: 3px;
+  }
+  .download-strip .ds {
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    margin-top: .4rem;
+  }
+  .btn-download {
+    background: #fff;
+    color: var(--red);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 14px 32px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    transition: background .2s, transform .1s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .btn-download:hover { background: #ffe0e0; transform: translateY(-1px); }
+
+  /* ── LICENCE ── */
+  .license-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--red);
+    padding: 2rem;
+  }
+  .license-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .license-tab {
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--dim);
+    padding: .6rem 1.5rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color .2s, border-color .2s;
+  }
+  .license-tab.active { color: var(--red); border-bottom-color: var(--red); }
+  .license-tab:hover { color: var(--mid); }
+  .license-content { display: none; }
+  .license-content.active { display: block; }
+  .license-text {
+    font-size: 11px;
+    color: var(--mid);
+    line-height: 2;
+    white-space: pre-wrap;
+  }
+  .license-text .lh { color: var(--text); font-size: 12px; margin-bottom: .5rem; display: block; }
+  .license-text .lr { color: var(--red); }
+  .license-prohibited {
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border2);
+    background: var(--glow);
+  }
+  .license-prohibited li {
+    list-style: none;
+    font-size: 11px;
+    color: var(--mid);
+    padding: .3rem 0;
+    display: flex;
+    gap: .75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .license-prohibited li:last-child { border-bottom: none; }
+  .license-prohibited li::before { content: '✗'; color: var(--red); flex-shrink: 0; }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── TERMINAL BLINK ── */
+  .blink::after {
+    content: '_';
+    animation: blink-anim .9s step-end infinite;
+    color: var(--red);
+  }
+  @keyframes blink-anim { 50% { opacity: 0; } }
+
+  /* ── SCANLINE ── */
+  .scanline {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: rgba(204,0,0,0.12);
+    pointer-events: none;
+    z-index: 200;
+    animation: scan 6s linear infinite;
+  }
+  @keyframes scan {
+    0%   { top: 0; }
+    100% { top: 100vh; }
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--red);
+    z-index: 300;
+    width: 0%;
+    transition: width .1s;
+  }
+
+  @media (max-width: 700px) {
+    .target-grid { grid-template-columns: 1fr; }
+    .data-grid { grid-template-columns: 1fr; }
+    .data-card.wide { grid-column: span 1; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    .hero-stats { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-overlay"></div>
+<div class="scanline"></div>
+<div class="progress-bar" id="progress"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="dot"></div>
+    SNIPE TOOL
+  </div>
+  <ul class="nav-links">
+    <li><a href="#ciblage">CIBLAGE</a></li>
+    <li><a href="#donnees">DONNÉES</a></li>
+    <li><a href="#features">FEATURES</a></li>
+    <li><a href="#export">EXPORT</a></li>
+    <li><a href="#v2">V2</a></li>
+    <li><a href="#license">LICENCE</a></li>
+    <li><a href="https://github.com/Le-barman-officielle/Roblox-Snipe-Tool/releases/download/v1/Roblox.Snipe.Tool.zip" style="color:var(--red);border:1px solid var(--border2);padding:4px 12px;">[ DOWNLOAD ]</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="page">
+  <section class="hero">
+    <div class="hero-eyebrow">INTELLIGENCE & RECON SYSTEM</div>
+    <h1 class="hero-title">
+      <span class="line1">ROBLOX</span>
+      <span class="line2">SNIPE<br>TOOL</span>
+      <span class="line3">by Kinito.exe</span>
+    </h1>
+    <p class="hero-desc">
+      Outil avancé de reconnaissance permettant d'explorer et d'analyser en profondeur n'importe quel profil Roblox via une interface sombre et une connexion directe à l'API officielle Roblox.
+    </p>
+    <div class="hero-cta">
+      <a href="https://github.com/Le-barman-officielle/Roblox-Snipe-Tool/releases/download/v1/Roblox.Snipe.Tool.zip" class="btn-primary">[ TÉLÉCHARGER .ZIP ]</a>
+      <a href="#donnees" class="btn-secondary">[ VOIR LES DONNÉES ]</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="n">7</div><div class="l">SECTIONS</div></div>
+      <div class="hero-stat"><div class="n">∞</div><div class="l">PROFILS</div></div>
+      <div class="hero-stat"><div class="n">100%</div><div class="l">API NATIVE</div></div>
+      <div class="hero-stat"><div class="n">V1</div><div class="l">VERSION ACTUELLE</div></div>
+    </div>
+  </section>
+
+  <!-- CIBLAGE -->
+  <section id="ciblage">
+    <div class="sec-label fade-in">// SYSTÈME DE CIBLAGE</div>
+    <div class="target-grid fade-in">
+      <div class="target-cell">
+        <div class="num">01</div>
+        <div class="method-tag">MÉTHODE ID</div>
+        <div class="method-name">[ ACQUIRE TARGET ]</div>
+        <div class="method-desc">Entrez directement un User ID numérique et lancez l'acquisition. Méthode la plus précise.</div>
+      </div>
+      <div class="target-cell">
+        <div class="num">02</div>
+        <div class="method-tag">MÉTHODE ALÉATOIRE</div>
+        <div class="method-name">[ RANDOM TARGET ]</div>
+        <div class="method-desc">Génère un ID aléatoire entre 1 et 999 999 999 et scanne automatiquement le profil trouvé.</div>
+      </div>
+      <div class="target-cell">
+        <div class="num">03</div>
+        <div class="method-tag">MÉTHODE USERNAME</div>
+        <div class="method-name">[ SCAN USERNAME ]</div>
+        <div class="method-desc">Recherche par nom d'utilisateur. Retourne une liste de cibles correspondantes à sélectionner.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DONNÉES -->
+  <section id="donnees">
+    <div class="sec-label fade-in">// DONNÉES DISPONIBLES</div>
+    <div class="data-grid fade-in">
+
+      <div class="data-card">
+        <div class="dc-tag">▶ PROFILE</div>
+        <div class="dc-title">Profil utilisateur</div>
+        <ul>
+          <li>Nom d'utilisateur & display name</li>
+          <li>User ID & Roblox ID interne</li>
+          <li>Date de création du compte</li>
+          <li>Description complète du profil</li>
+        </ul>
+        <div class="dc-corner">P</div>
+      </div>
+
+      <div class="data-card">
+        <div class="dc-tag">▶ PREV. USERNAMES</div>
+        <div class="dc-title">Anciens pseudos</div>
+        <ul>
+          <li>Historique complet des alias</li>
+          <li>Tous les noms utilisés par le passé</li>
+          <li>Pagination automatique (100/page)</li>
+        </ul>
+        <div class="dc-corner">A</div>
+      </div>
+
+      <div class="data-card">
+        <div class="dc-tag">▶ FRIENDS</div>
+        <div class="dc-title">Liste d'amis</div>
+        <ul>
+          <li>Liste complète des amis</li>
+          <li>Résolution automatique des usernames</li>
+          <li>Compteur total affiché</li>
+        </ul>
+        <div class="dc-corner">F</div>
+      </div>
+
+      <div class="data-card">
+        <div class="dc-tag">▶ FOLLOWERS / FOLLOWING</div>
+        <div class="dc-title">Abonnés & suivis</div>
+        <ul>
+          <li>Liste complète des followers</li>
+          <li>Liste des comptes suivis</li>
+          <li>Pagination automatique via cursor API</li>
+        </ul>
+        <div class="dc-corner">S</div>
+      </div>
+
+      <div class="data-card">
+        <div class="dc-tag">▶ GROUPS</div>
+        <div class="dc-title">Groupes</div>
+        <ul>
+          <li>Tous les groupes rejoints</li>
+          <li>Nom + ID de chaque groupe</li>
+          <li>Double fallback API (v1 & v2)</li>
+        </ul>
+        <div class="dc-corner">G</div>
+      </div>
+
+      <!-- ONLINE FRIENDS wide -->
+      <div class="data-card wide">
+        <div class="dc-tag">▶ ONLINE FRIENDS</div>
+        <div class="dc-title">Amis en ligne — statuts temps réel</div>
+        <table class="status-table">
+          <tr>
+            <td><span class="status-dot s-green"></span><span class="st-label">EN LIGNE</span></td>
+            <td class="st-desc">Sur le site web Roblox</td>
+          </tr>
+          <tr>
+            <td><span class="status-dot s-red"></span><span class="st-label">IN-GAME</span></td>
+            <td class="st-desc">Dans un jeu actif — nom du jeu affiché</td>
+          </tr>
+          <tr>
+            <td><span class="status-dot s-orange"></span><span class="st-label">IN STUDIO</span></td>
+            <td class="st-desc">Dans Roblox Studio — projet affiché</td>
+          </tr>
+          <tr>
+            <td><span class="status-dot s-blue"></span><span class="st-label">INVISIBLE</span></td>
+            <td class="st-desc">Statut présence masqué</td>
+          </tr>
+          <tr>
+            <td><span class="status-dot s-gray"></span><span class="st-label">OFFLINE</span></td>
+            <td class="st-desc">Hors ligne — non inclus dans la liste</td>
+          </tr>
+        </table>
+        <div class="dc-corner">O</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="sec-label fade-in">// CARACTÉRISTIQUES</div>
+    <div class="features-grid fade-in">
+      <div class="feat-card">
+        <div class="fi">01</div>
+        <div class="ft">Interface sombre & rouge — thème immersif et lisible</div>
+      </div>
+      <div class="feat-card">
+        <div class="fi">02</div>
+        <div class="ft">Connexion directe à l'API officielle Roblox</div>
+      </div>
+      <div class="feat-card">
+        <div class="fi">03</div>
+        <div class="ft">Navigation fluide par catégories via sidebar</div>
+      </div>
+      <div class="feat-card">
+        <div class="fi">04</div>
+        <div class="ft">Résolution de username batch (100 IDs/requête)</div>
+      </div>
+      <div class="feat-card">
+        <div class="fi">05</div>
+        <div class="ft">Splash screen animé au démarrage</div>
+      </div>
+      <div class="feat-card">
+        <div class="fi">06</div>
+        <div class="ft">Multithreading — l'UI reste fluide pendant le scan</div>
+      </div>
+      <div class="feat-card">
+        <div class="fi">07</div>
+        <div class="ft">Fenêtre de résultats de recherche avec sélection</div>
+      </div>
+      <div class="feat-card">
+        <div class="fi">08</div>
+        <div class="ft">Export complet en fichier .txt formaté</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPORT -->
+  <section id="export">
+    <div class="sec-label fade-in">// EXPORT</div>
+    <div class="export-strip fade-in">
+      <div>
+        <div class="et">[ EXPORT DATA ]</div>
+        <div class="es">Toutes les données collectées sauvegardées dans un fichier <code style="color:var(--red)">.txt</code> formaté et horodaté</div>
+      </div>
+      <a href="#" class="btn-primary" onclick="return false;">[ EXPORT .TXT ]</a>
+    </div>
+    <div style="font-size:11px;color:var(--dim);line-height:2;padding-left:.5rem;">
+      Le fichier inclut : profil · anciens noms · amis · amis en ligne (avec statut + jeu) · followers · following · groupes
+    </div>
+  </section>
+
+  <!-- V2 -->
+  <section id="v2">
+    <div class="sec-label fade-in">// UPCOMING — V2</div>
+    <div class="v2-box fade-in">
+      <div class="v2-item">
+        <span class="tick">✓</span>
+        <span class="vt">Détection si un compte Roblox est banni ou non</span>
+      </div>
+      <div class="v2-item">
+        <span class="tick">✓</span>
+        <span class="vt">Affichage des noms d'affichage (display names) en plus des noms d'utilisateur dans toutes les sections</span>
+      </div>
+      <div class="v2-item" style="opacity:.4">
+        <span class="pending">○</span>
+        <span>Plus de modules à venir...</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTES -->
+  <section>
+    <div class="sec-label fade-in">// NOTES</div>
+    <ul class="note-list fade-in">
+      <li>Certaines informations dépendent de la confidentialité du compte ciblé</li>
+      <li>Les amis en ligne peuvent être masqués si leur statut de présence est privé</li>
+      <li>Outil développé via l'API publique Roblox à titre informatif</li>
+      <li>Développé avec Python 3 + Tkinter — aucune dépendance externe lourde</li>
+    </ul>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section id="download">
+    <div class="sec-label fade-in">// TÉLÉCHARGEMENT</div>
+    <div class="download-strip fade-in">
+      <div>
+        <div class="dt">[ ROBLOX SNIPE TOOL v1 ]</div>
+        <div class="ds">Windows · Archive ZIP · Roblox.Snipe.Tool.zip · Aucune installation requise</div>
+      </div>
+      <a href="https://github.com/Le-barman-officielle/Roblox-Snipe-Tool/releases/download/v1/Roblox.Snipe.Tool.zip" class="btn-download">[ TÉLÉCHARGER .ZIP ]</a>
+    </div>
+    <div style="font-size:10px;color:var(--dim);line-height:2;padding-left:.5rem;">
+      Hébergé sur GitHub Releases · version stable v1 · by Kinito.exe
+    </div>
+  </section>
+
+  <!-- LICENCE -->
+  <section id="license">
+    <div class="sec-label fade-in">// LICENCE</div>
+    <div class="license-box fade-in">
+      <div class="license-tabs">
+        <div class="license-tab active" onclick="switchLang('en')">ENGLISH</div>
+        <div class="license-tab" onclick="switchLang('fr')">FRANÇAIS</div>
+      </div>
+
+      <div class="license-content active" id="tab-en">
+        <div class="license-text">
+<span class="lh">Copyright (c) 2026 <span class="lr">Kinito.exe</span> — All rights reserved.</span>This software, named <span class="lr">"Roblox Snipe Tool"</span>, including its executable file (.exe), source code, and all associated files, is the exclusive property of Kinito.exe.
+
+<span class="lr">You are NOT permitted to:</span></div>
+        <div class="license-prohibited"><ul>
+          <li>Modify, adapt, translate, or create derivative works from this software</li>
+          <li>Reverse engineer, decompile, disassemble, or attempt to extract the source code from the executable (.exe)</li>
+          <li>Fragment, alter, or manipulate the executable in any way</li>
+          <li>Copy, redistribute, sublicense, sell, or commercially exploit this software</li>
+        </ul></div>
+        <div class="license-text" style="margin-top:1rem;">Any use of this software without prior written permission from <span class="lr">Kinito.exe</span> is strictly prohibited.
+
+This software is provided <span class="lr">"as is"</span>, without warranty of any kind.</div>
+      </div>
+
+      <div class="license-content" id="tab-fr">
+        <div class="license-text">
+<span class="lh">Copyright (c) 2026 <span class="lr">Kinito.exe</span> — Tous droits réservés.</span>Ce logiciel, nommé <span class="lr">"Roblox Snipe Tool"</span>, y compris son fichier exécutable (.exe), son code source et tous les fichiers associés, est la propriété exclusive de Kinito.exe.
+
+<span class="lr">Il est STRICTEMENT INTERDIT de :</span></div>
+        <div class="license-prohibited"><ul>
+          <li>Modifier, adapter, traduire ou créer des œuvres dérivées de ce logiciel</li>
+          <li>Décompiler, désassembler, faire de la rétro-ingénierie ou tenter d'extraire le code source du fichier exécutable (.exe)</li>
+          <li>Fragmenter, altérer ou manipuler l'exécutable de quelque manière que ce soit</li>
+          <li>Copier, redistribuer, sous-licencier, vendre ou exploiter commercialement ce logiciel</li>
+        </ul></div>
+        <div class="license-text" style="margin-top:1rem;">Toute utilisation sans autorisation écrite préalable de <span class="lr">Kinito.exe</span> est strictement interdite.
+
+Ce logiciel est fourni <span class="lr">"tel quel"</span>, sans aucune garantie.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="fade-in">
+    <div class="footer-brand">ROBLOX SNIPE TOOL</div>
+    <div class="footer-copy">
+      by <span style="color:var(--red)">Kinito.exe</span><br>
+      // UNAUTHORIZED ACCESS PROHIBITED //
+    </div>
+  </footer>
+</div>
+
+<script>
+  // Licence tabs
+  function switchLang(lang) {
+    document.querySelectorAll('.license-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.license-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + lang).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // Progress bar on scroll
+  window.addEventListener('scroll', () => {
+    const el = document.documentElement;
+    const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+
+  // Intersection Observer for fade-in
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+  // Stagger children in grids
+  document.querySelectorAll('.target-grid, .data-grid, .features-grid').forEach(grid => {
+    grid.querySelectorAll(':scope > *').forEach((child, i) => {
+      child.style.transitionDelay = (i * 0.07) + 's';
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+Copyright (c) 2026 Kinito.exe
+
+All rights reserved / Tous droits réservés.
+
+ENGLISH:
+
+This software, named "Roblox Snipe Tool", including its executable file (.exe), source code, and all associated files, is the exclusive property of Kinito.exe.
+
+You are NOT permitted to:
+
+* Modify, adapt, translate, or create derivative works from this software
+* Reverse engineer, decompile, disassemble, or attempt to extract the source code from the executable (.exe)
+* Fragment, alter, or manipulate the executable in any way
+* Copy, redistribute, sublicense, sell, or commercially exploit this software
+
+Any use of this software without prior written permission from Kinito.exe is strictly prohibited.
+
+This software is provided "as is", without warranty of any kind.
+
+FRANÇAIS :
+
+Ce logiciel, nommé "Roblox Snipe Tool", y compris son fichier exécutable (.exe), son code source et tous les fichiers associés, est la propriété exclusive de Kinito.exe.
+
+Il est STRICTEMENT INTERDIT de :
+
+* Modifier, adapter, traduire ou créer des œuvres dérivées de ce logiciel
+* Décompiler, désassembler, faire de la rétro-ingénierie ou tenter d'extraire le code source du fichier exécutable (.exe)
+* Fragmenter, altérer ou manipuler l’exécutable de quelque manière que ce soit
+* Copier, redistribuer, sous-licencier, vendre ou exploiter commercialement ce logiciel
+
+Toute utilisation sans autorisation écrite préalable de Kinito.exe est strictement interdite.
+
+Ce logiciel est fourni "tel quel", sans aucune garantie.
